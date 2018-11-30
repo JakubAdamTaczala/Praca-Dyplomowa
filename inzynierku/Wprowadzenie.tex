@@ -1,0 +1,20 @@
+\chapter{Wprowadzenie}
+Dążenie człowieka do odnalezienie drogi do celu jest obecne od zarania dziejów. O podążaniu po wyznaczonej ścieżce wspomina już bowiem mitologia grecka w micie pt. ,,Dzieje Tezeusza'', gdzie bohater by wyjść po nitce z labiryntu musiał zmierzyć się z przeszkodą -- Minotaurem\cite{mitologia}. Wraz z ewolucją powstawały coraz to nowsze możliwości podążania do celu wraz z omijaniem przeszkód. Obecny Postęp techniki pozwala by realizacje tego celu powierzyć robotom autonomicznym. Owe choć w uproszczony sposób są w stanie samodzielnie podejmować podstawowe decyzje, jednakże strategiczne decyzje wciąż musi podejmować człowieka. Sposobów na rozwiązanie tego problemu wciąż przybywa, co sprzyja rozwojowi technologii.
+\section{Cel i zakres pracy}
+Celem pracy jest zastosowanie czujników ultradźwiękowych oraz czujników odbiciowych do budowy robota autonomicznego poruszającego się po czarnej linii, potrafiącego ominąć przeszkodę postawioną na owej trasie. Z tego powodu konieczne jest rozpoznanie możliwości oraz opracowanie algorytmu poruszania się robota po wyznaczonej ścieżce, wraz z omijaniem przeszkód i powrotem na wyznaczoną ścieżkę, zakładając iż otoczenie nie zwraca nam odpowiedzi o aktualnym położeniu robota. Projekt jest połączeniem szczególnych cech robotów typu Line Follower oraz Micromouse.
+Funkcje robota:
+\begin{itemize}
+    \item określenie toru jazdy na podstawie czujnika odbiciowego względem czarnej linii na białym podłożu;
+    \item określenie odległości od przeszkody za pomocą czujników ultradźwiękowych;
+    \item poruszanie się wzdłuż przeszkody określając odległość od niej za pomocą czujników odległości;
+    \item określenie przebytego dystansu na podstawie zliczania ilości kroków silników krokowych;
+    \item ponowne odnalezienie linii zadającej tor jazdy za pomocą czujników ultradźwiękowych podczas poruszania się wzdłuż przeszkody.
+\end{itemize}
+
+\section{Możliwe zastosowania}
+Robot w większej formie może być wykorzystywany w wielu projektach.
+\begin{itemize}
+    \item Jako autonomiczny wózek systemowy do transportu towaru w magazynach o dużej przestrzeni. Z podobnego systemu korzystają niektóre sortownie paczek w firmach kurierskich.
+    \item Zastosowanie w postaci podstawy platformy do robota mobilnego z manipulatorem. Robot taki mógłby poruszać się w magazynach niskiego składu. A zastosowanie efektora pozwoliło by na przenoszenie pojedynczych sztuk towarów.
+    \item Wykorzystanie do budowy modułu podstawy autonomicznego wózka widłowego w magazynach wysokiego składu. Zastosowanie robota autonomicznego w takich warunkach pozwala uniknąć narażania pracowników na wypadek związany z upadkiem towaru z półek. Pozwoli także na precyzyjne, powtarzalne ustawianie palet na półkach wysokiego składu w taki sposób by nie miał możliwości osunięcia się z konstrukcji. Natomiast zastosowanie czujników ultradźwiękowych pozwoli na wyminiecie innego robota, który zatrzymał się np. z powodu awarii, bądź ominięcie innej przeszkody, która nie powinna znajdować się na trasie.
+\end{itemize}

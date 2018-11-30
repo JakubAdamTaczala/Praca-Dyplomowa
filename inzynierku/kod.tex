@@ -1,0 +1,203 @@
+#include <QTRSensors.h>
+
+#define LED           13    // dioda sygnalizujaca
+#define NUM_SENSORS   8     // ilosc sensorow lini
+#define TIMEOUT       2500  // czas w 2500 mikrosekundach dlaustawienia wyjscia QRT na niskie for sensor outputs to go low
+#define EMITTER_PIN   2     // Emiter QRT
+#define TRIG_L        49    // Czujniki ultradzwiekowe
+#define ECHO_L        48
+#define TRIG_S        51
+#define ECHO_S        50
+#define TRIG_P        53
+#define ECHO_P        52
+#define STEP_P        37    // Silniki krokowe
+#define DIR_P         36
+#define STEP_L        39
+#define DIR_L         38
+#define DEGRE         1.8
+
+//####################__IMPLEMENTACJA_CZUJNIKA_LINII
+QTRSensorsRC qtrrc((unsigned char[]) {40, 41, 42, 43, 44, 45, 46, 47}, NUM_SENSORS, TIMEOUT, EMITTER_PIN); 
+unsigned int sensorValues[NUM_SENSORS]; // tablica odczytow QRT
+
+void miganie_LED(int PIN, int d_time) {
+  digitalWrite(PIN, HIGH);
+  delay(d_time);
+  digitalWrite(PIN, LOW);
+  delay(d_time);
+}
+
+void QRT_kalibracja(){
+  delay(500);
+  pinMode(LED, OUTPUT);
+  digitalWrite(13, HIGH);        // informacja o ty, ze trwa kalibracja
+  for (int i = 0; i < 400; i++)  // kalibracja trwa okolo 10s
+    qtrrc.calibrate();           // odczytuje wszystkie sensory 10 razy przez 2500 us na odczyt (tj. ~25 ms na polacznie)
+  digitalWrite(13, LOW);         //koniec kalibracji
+}
+
+void QRT_kalibracja_wartosci_MIN(){ // Wypisanie minimalnych wartosci kalibracji
+   for (int i = 0; i < NUM_SENSORS; i++)
+  {
+    Serial.print(qtrrc.calibratedMinimumOn[i]);
+    Serial.print(' ');
+  }
+  Serial.println();
+}
+
+void QRT_kalibracja_wartosci_MAX(){ // Wypisanie maksymalnych wartosci kalibracji
+  for (int i = 0; i < NUM_SENSORS; i++)
+  {
+    Serial.print(qtrrc.calibratedMaximumOn[i]);
+    Serial.print(' ');
+  }
+  Serial.println();
+}
+
+void QRT_START(){
+  QRT_kalibracja();
+  QRT_kalibracja_wartosci_MIN();
+  QRT_kalibracja_wartosci_MAX();
+  Serial.println();
+  delay(1000);
+}
+
+void QRT_odczyt(){
+  qtrrc.read(sensorValues);
+}
+
+void QRT_wypisanie_wartosci(){
+  for (unsigned char i = 0; i < NUM_SENSORS; i++)
+  {
+    Serial.print(i+1);
+    Serial.print('\t');
+    Serial.print(sensorValues[i]);
+    Serial.print('\t');
+  }
+  Serial.println();
+}
+
+int QRT_ktory_widzi(){
+  int w=0;
+  int ktory=0;
+  
+  for (unsigned char i = 0; i < NUM_SENSORS; i++)
+  {
+    if(w<sensorValues[i])
+    {
+      w=sensorValues[i];
+      ktory=i+1;
+    }
+    if(w<1500)
+    {
+      ktory=0;
+    }
+  }
+  return ktory;
+}
+
+void US_START(){
+  pinMode(TRIG_L, OUTPUT); // Pin TRIG jako wyjście
+  pinMode(ECHO_L, INPUT);  // Pin echo jako wejście
+  pinMode(TRIG_S, OUTPUT); // Pin TRIG jako wyjście
+  pinMode(ECHO_S, INPUT);  // Pin echo jako wejście
+  pinMode(TRIG_P, OUTPUT); // Pin TRIG jako wyjście
+  pinMode(ECHO_P, INPUT);  // Pin echo jako wejście
+}
+
+void US_POMIAR(int PIN_TRIG){
+  digitalWrite(PIN_TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(PIN_TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(PIN_TRIG, LOW);
+}
+
+int US_ODCZYT_cm(int PIN_ECHO){
+  long US_czas, US_odleglosc;
+  US_czas = pulseIn(PIN_ECHO, HIGH);
+  US_odleglosc = US_czas/58;
+  return US_odleglosc;
+}
+
+void stepperRotate_L(float rotation, float rpm) {
+  float stepsPerRotation = (360.00/DEGRE);
+  unsigned long stepPeriodmicroSec = ((60.0000 / (rpm * stepsPerRotation)) * 1E6 / 2.0000) - 5;
+  for (unsigned long i = 0; i < rotation; i++) {
+    digitalWrite(STEP_L,HIGH); // kierunek
+    delayMicroseconds(stepPeriodmicroSec);
+    digitalWrite(STEP_L,LOW); // kierunek
+    delayMicroseconds(stepPeriodmicroSec);
+  }
+}
+
+void stepperRotate_P(float rotation, float rpm) {
+  float stepsPerRotation = (360.00/DEGRE);
+  unsigned long stepPeriodmicroSec = ((60.0000 / (rpm * stepsPerRotation)) * 1E6 / 2.0000) - 5;
+  for (unsigned long i = 0; i < rotation; i++) {
+    digitalWrite(STEP_P,HIGH); // kierunek
+    delayMicroseconds(stepPeriodmicroSec);
+    digitalWrite(STEP_P,LOW); // kierunek
+    delayMicroseconds(stepPeriodmicroSec);
+  }
+}
+
+void stepperRotate_S(float rotation, float rpm) {
+  float stepsPerRotation = (360.00/DEGRE);
+  unsigned long stepPeriodmicroSec = ((60.0000 / (rpm * stepsPerRotation)) * 1E6 / 2.0000) - 5;
+  for (unsigned long i = 0; i < rotation; i++) {
+    digitalWrite(STEP_L,HIGH); // kierunek
+    digitalWrite(STEP_P,HIGH); // kierunek
+    delayMicroseconds(stepPeriodmicroSec);
+    digitalWrite(STEP_L,LOW); // kierunek
+    digitalWrite(STEP_P,LOW); // kierunek
+    delayMicroseconds(stepPeriodmicroSec);
+  }
+}
+
+void setup() {
+  pinMode(LED, OUTPUT); // Ustawienie portu led jako wyjscie
+  Serial.begin(9600);   // Ustawienie prędkości transmisji
+  //QRT_START();          // Kalibracja i sprawdzenie QRT
+  //US_START();           // Ustawienie wejsc/wyjsc
+
+  pinMode(STEP_P, OUTPUT); // Ustawienie portow na wyjscia dla silnikow
+  pinMode(DIR_P, OUTPUT);
+  pinMode(STEP_L, OUTPUT);
+  pinMode(DIR_L, OUTPUT);
+  
+  digitalWrite(DIR_P,HIGH); // kierunek do przodu
+  digitalWrite(DIR_L,HIGH); // kierunek do przodu
+}
+
+void loop() {
+  long US_odleglosc_L;
+  long US_odleglosc_S;
+  long US_odleglosc_P;
+  
+  //miganie_LED(LED, 500);
+
+  /*
+  QRT_odczyt();
+  //QRT_wypisanie_wartosci();
+  Serial.println(QRT_ktory_widzi());
+
+  US_POMIAR(TRIG_L);                    // Wykonanie pomiaru
+  US_odleglosc_L=pulseIn(ECHO_L, HIGH); // Pobranie wyniku pomiaru
+  US_POMIAR(TRIG_S);
+  US_odleglosc_S=pulseIn(ECHO_S, HIGH);
+  US_POMIAR(TRIG_P);
+  US_odleglosc_P=pulseIn(ECHO_P, HIGH);
+  
+  Serial.print(US_odleglosc_L);         // Wypisanie pomiarow
+  Serial.print(" ");
+  Serial.print(US_odleglosc_S);
+  Serial.print(" ");
+  Serial.print(US_odleglosc_P);
+  Serial.println(" ");
+  */
+
+  stepperRotate_S(10, 50);
+  stepperRotate_P(20, 50);
+  stepperRotate_L(20, 50);
+}

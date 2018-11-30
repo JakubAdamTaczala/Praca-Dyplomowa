@@ -1,0 +1,58 @@
+\documentclass[12pt, eng, oneside, openany, final]{mgr}
+% \documentclass[eng, printmode]{mgr}
+
+
+\include{preambula}
+% \include{bibliografia}
+
+
+% re-definiowane polecenie w celu przechowywania nazwiska autora, jego brak powoduje ostrzezenie (Warning) podczas przetwarzania.
+\author{Jakub Adam Taczała} 
+
+% re-definiowane polecenie w celu przechowywania polskiego tytułu pracy magisterskiej, jego brak powoduje ostrzezenie (Warning) podczas przetwarzania.
+\title{Omijanie przeszkód przez robota mobilnego poruszającego się wzdłuż linii} 
+
+
+% polecenie zdefiniowane w celu przechowywania angielskiego tytułu pracy magisterskiej, jego brak powoduje ostrzezenie (Warning) podczas przetwarzania.
+\engtitle{Obstacle avoidance by the linefollower mobile robot} 
+
+
+% polecenie zdefiniowane w celu przechowywania danych osobowych prowadzacego prace, jego brak powoduje ostrzezenie (Warning) podczas przetwarzania.
+\supervisor{Dr inż. Janusz Jakubiak} 
+
+% polecenie zdefiniowane w celu przechowywania danych osobowych opiekuna pracy. W przypadku gdy jest to ta sama osoba co \supervisor, nie nalezy uzywac tego polecenia. Jego brak usunie ze strony tytułowej zbedna informacje.
+%\guardian{tytuł, Imie Nazwisko, jednostka} 
+
+
+% polecenie zdefiniowane w celu przechowywania nazwy kierunku studiów, jego brak powoduje ostrzezenie (Warning) podczas przetwarzania.
+\field{Automatyka i Robotyka (AIR)} 
+
+
+% polecenie zdefiniowane w celu przechowywania nazwy specjalnosci studiów, jego brak powoduje ostrzezenie (Warning) podczas przetwarzania.
+\specialisation{Robotyka (ARR)} 
+
+% re-definiowane polecenie w celu przechowywania roku. Standardowo u dołu strony tytułowej wstawiany jest biezacy rok, uzycie tego polecenia pozwala wstawic dowolny rok.
+\date{2018} 
+
+
+
+\begin{document}
+\maketitle
+% polecenie w miejscu swojego wystapienia łamie biezaca strone i na nastepnej (w przypadku openright na nastepnej prawej) wstawia po prawej u dołu tresc dedykacji z argumentu tekst. Argument szer musi miec wartosc sztywnej długosci i definiuje szerokosc pola tekstowego z trescia dedykacji.
+\dedication{6cm}{Pracę dedykuję Ojcu, za motywację, wytrwałość i pokazanie jak dążyć do celu mimo przeciwności. \texttt{Dziękuję}}
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\newpage
+\input{inzynierku/tresc.tex}
+
+%\input{inzynierku/przyklady.tex}
+
+\bibliographystyle{plabbrv}
+
+\addcontentsline{toc}{chapter}{Bibliografia} %utworzenie w spisie treści pozycji Bibliografia
+\bibliography{bibliografia} % wstawia bibliografię korzystając z pliku bibliografia.bib - dotyczy BibTeXa, jeżeli nie korzystamy z BibTeXa należy użyć otoczenia thebibliography
+
+\end{document}
