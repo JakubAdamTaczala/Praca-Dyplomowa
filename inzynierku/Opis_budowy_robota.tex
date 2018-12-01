@@ -1,6 +1,6 @@
 \chapter{Opis budowy robota}
 \section{Wstęp}
-Rozdział przedstawia zadania postawione przed robotem, które są do zrealizowania w ramach pracy inżynierskiej. Zawarte jest w nim także porównanie podobnych konstrukcji, których fragmenty zostały przeanalizowane i wybrane do budowy konstrukcji. Zawiera też opis użytych modułów wraz z argumentacją wyboru.
+Rozdział przedstawia zadania postawione przed robotem, zostaną zrealizowane w ramach pracy inżynierskiej. Zawarte jest w nim także porównanie podobnych konstrukcji, których elementy zostały przeanalizowane i wybrane do budowy konstrukcji. Zawiera też opis użytych modułów wraz z argumentacją wyboru.
 \section{Zadania do realizacji przez robota}
 \begin{itemize}
     \item \textbf{Przetworzenie informacji o położeniu względem wyznaczonej ścieżki}
@@ -20,16 +20,16 @@ Rozdział przedstawia zadania postawione przed robotem, które są do zrealizowa
 \section{Podobne konstrukcje}
 Robot jest połączeniem dwóch klasycznych konstrukcji, robota podążającego po linii oraz robota omijającego przeszkody.
 
-Roboty podążające po linii często wykorzystują czujniki własnej konstrukcji zbudowane z użyciem transoptorów. Takie podejście pozwala dostosować kształt wiązki czujników do kształtu maszyny, jednakże wymaga własnego projektu modułu. Często takie rozwiązania odczytują bezpośrednio napięcie z fotodiody, przez co konieczne jest wykorzystanie przetwornika ADC.\cite{line_czujnik} Problem ten można rozwiązać prze dodanie kondensatorów, a następnie pomiar czasu ich rozładowania na portach I/O procesora, tak jak to zostało wykonane w projekcie. 
+Roboty podążające po linii często wykorzystują czujniki własnej konstrukcji zbudowane z użyciem transoptorów. Takie podejście pozwala dostosować kształt wiązki czujników do kształtu maszyny, jednakże wymaga własnego projektu modułu. Często takie rozwiązania odczytują bezpośrednio napięcie z fotodiody, przez co konieczne jest wykorzystanie przetwornika ADC \cite{line_czujnik}. Problem ten można rozwiązać przez dodanie kondensatorów, a następnie pomiar czasu ich rozładowania na portach I/O procesora, tak jak to zostało wykonane w projekcie. 
 
-Dobrym rozwiązaniem do kontroli otoczenia jest zastosowanie czujników odległości na czole pojazdu. \cite{line_sharp} Jednakże zastosowanie czujników ultradźwiękowych pozwala uzyskać większy kąt pomiaru, a także mniejszą wrażliwość na chropowate powierzchnie ze względu na szerokość wiązki fali czołowej. Robot spełniający podobne zadania, jednakże bez funkcji omijania przeszkody wyposażony w czujnik ultradźwiękowy może pełnić funkcje robota przemysłowego jako wózek AGV, który to jest wykorzystywany do transportu towarów w magazynie. \cite{AGV}
+Dobrym rozwiązaniem do obserwacji otoczenia jest zastosowanie czujników odległości na czole pojazdu  \cite{line_sharp}. Jednakże ze względu na szerokość wiązki fali czołowej zastosowanie czujników ultradźwiękowych pozwala uzyskać większy kąt pomiaru, a także mniejszą wrażliwość na chropowate powierzchnie. Robot spełniający podobne zadania, jednakże bez funkcji omijania przeszkody wyposażony w czujnik ultradźwiękowy może pełnić funkcje robota przemysłowego jako wózek AGV, wykorzystywany do transportu towarów w magazynie \cite{AGV}.
 
-Dość innowacyjnym sposobem jest zastosowanie silników krokowych do napędu robota mobilnego. Jednakże takie rozwiązanie pozwala na dokładne sterowanie w otwartej pętli sterowania, tym samym na bieżąco jest śledzona pozycja robota.\cite{kurosz} Takie rozwiązanie wiąże się jednocześnie z ograniczeniem prędkości robota w porównaniu do użycia innych silników prądu stałego.\cite{Tadeo} W przedstawionej pracy jednakże nie zależy na uzyskaniu prędkości przejazdu, a w precyzji sterowania, by możliwie jak najdokładniej określić położenie robota względem linii.
+Dość innowacyjnym sposobem jest zastosowanie silników krokowych do napędu robota mobilnego. Takie rozwiązanie pozwala na dokładne sterowanie w otwartej pętli sterowania, tym samym na bieżąco jest śledzona pozycja robota.\cite{kurosz} Jednak wiąże się to jednocześnie z ograniczeniem prędkości robota w porównaniu do użycia innych silników prądu stałego \cite{Tadeo}. W przedstawionej pracy nie zależy na uzyskaniu prędkości przejazdu, a precyzji sterowania, by możliwie jak najdokładniej określić położenie robota względem linii.
 
 \section{Opis zastosowanych modułów}
-Podrozdział zawiera opis zastosowanych czujników wraz z uzasadnieniem wyboru w ramach projektu. Wybory te są wynikiem analizy konstrukcji mających spełniać zbliżone zadania. Tym samym sprawdzana jest stosowność doboru elementów.
+Podrozdział zawiera opis zastosowanych czujników wraz z uzasadnieniem wyboru w ramach projektu. Wybory te są wynikiem analizy konstrukcji mających spełniać zbliżone zadania. Tym samym sprawdzana jest prawidłowość doboru elementów.
 \subsection{Opis konstrukcji typu Line Follower -- czujniki linii}
-Celem konstrukcji jest podążanie po wyznaczonej trasie. Podczas zawodów robotycznych jest wykorzystywana czarna linia na kontrastowym białym podłożu, co pozwala robotowi na jednoznaczne określenie trasy poprzez użycie czujników odbiciowych składających się z par: dioda  IR razem z fototranzystorem. Dodatkowo poprzez włącznie w obwód kondensatorów pozwala na cyfrowy odczyt wartości poprzez pomiar czasu rozładowania danego kondensatora. W projekcie został użyty gotowych moduł składający się z ośmiu par takich czujników.
+Celem konstrukcji jest podążanie po wyznaczonej trasie. Podczas zawodów robotycznych jest wykorzystywana czarna linia na kontrastowym białym podłożu, co pozwala robotowi na jednoznaczne określenie trasy poprzez użycie czujników odbiciowych składających się z par: dioda  IR razem z fototranzystorem. Dodatkowo poprzez włączenie w obwód kondensatorów, pozwala na cyfrowy odczyt wartości poprzez pomiar czasu rozładowania danego kondensatora. W projekcie został użyty gotowy moduł składający się z ośmiu par takich czujników.
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.5\textwidth]{inzynierku/img/listwa.jpg}
@@ -160,7 +160,7 @@ W ramach przedstawionego problemu przyjęto następujące uproszczenia:
     \item Pomieszczenie jest oświetlone przynajmniej na poziomie 300 luxów.
 \end{enumerate}
 
-\section{Ograniczenia robota wynikające z konstrukcji robota}
+\section{Ograniczenia konstrukcji robota}
 \begin{enumerate}
     \item Koła porusza się z prędkością nie większą niż $100RPM$.
     \item Obiekt do ominięcia znajduje się na wysokości czujników ultradźwiękowych.

@@ -45,7 +45,7 @@ Wszystkie wyżej wymienione funkcje przyjmują argumenty $rotation$ oraz $rpm$, 
 W celu jazdy do przodu na pin $DIR$ należy podać sygnał wysoki, natomiast przy jeździe do tyłu stan niski.
 
 \section{Opis algorytmu}
-Działanie rozpoczyna się od kalibracji czujników wykrywania linii. Następnie przeprowadzana jest próba wykrycia przeszkody, jeśli owa zakończy się negatywnie, to robot próbuje podążać po linii. Podążanie po linii trwa dopóty robot nie natrafi na przeszkodę, gdzie ocenia którą stroną może ją ominąć, bądź zgłasza brak możliwości minięcia. Po ominięciu przeszkody kontynuuje jazdę po linii wyszukując następnej przeszkody, tym samym algorytm się zapętla. Dokładny algorytm przedstawiony jest na rysunku \ref{fig:schemat_blokowy}.
+Działanie rozpoczyna się od kalibracji czujników wykrywania linii. Następnie przeprowadzana jest próba wykrycia przeszkody, jeśli owa zakończy się negatywnie, to robot próbuje podążać po linii. Podążanie po linii trwa dopóty robot nie natrafi na przeszkodę, gdzie ocenia którą stroną może ją ominąć, bądź zgłasza brak możliwości minięcia. Po ominięciu przeszkody kontynuuje jazdę po linii wyszukując następną przeszkodę powracając do fazy podążania po linii. Dokładny algorytm przedstawiony jest na rysunku \ref{fig:schemat_blokowy}.
 \section{Graf algorytmu}
 \begin{figure}[H]
 \centering
