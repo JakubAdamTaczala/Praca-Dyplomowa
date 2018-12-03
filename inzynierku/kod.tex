@@ -8,13 +8,15 @@
 #define ECHO_L        48
 #define TRIG_S        51
 #define ECHO_S        50
-#define TRIG_P        53
-#define ECHO_P        52
+#define TRIG_P        25
+#define ECHO_P        24
 #define STEP_P        37    // Silniki krokowe
 #define DIR_P         36
 #define STEP_L        39
 #define DIR_L         38
 #define DEGRE         1.8
+
+#define m_speed       40
 
 //####################__IMPLEMENTACJA_CZUJNIKA_LINII
 QTRSensorsRC qtrrc((unsigned char[]) {40, 41, 42, 43, 44, 45, 46, 47}, NUM_SENSORS, TIMEOUT, EMITTER_PIN); 
@@ -77,6 +79,15 @@ void QRT_wypisanie_wartosci(){
   Serial.println();
 }
 
+int QRT_pobranie_max_wartosci(){
+  int tmp=0;
+  for (unsigned char i = 0; i < NUM_SENSORS; i++)
+  {
+    if(tmp<sensorValues[i]) tmp=sensorValues[i];
+  }
+  return tmp;
+}
+
 int QRT_ktory_widzi(){
   int w=0;
   int ktory=0;
@@ -121,6 +132,14 @@ int US_ODCZYT_cm(int PIN_ECHO){
 }
 
 void stepperRotate_L(float rotation, float rpm) {
+  if(rotation<0) {
+    digitalWrite(DIR_L,LOW); // kierunek do przodu
+    rotation=(-1)*rotation;
+
+  }
+  else {
+    digitalWrite(DIR_L,HIGH); // kierunek do przodu
+  }
   float stepsPerRotation = (360.00/DEGRE);
   unsigned long stepPeriodmicroSec = ((60.0000 / (rpm * stepsPerRotation)) * 1E6 / 2.0000) - 5;
   for (unsigned long i = 0; i < rotation; i++) {
@@ -132,6 +151,13 @@ void stepperRotate_L(float rotation, float rpm) {
 }
 
 void stepperRotate_P(float rotation, float rpm) {
+  if(rotation<0) {
+    digitalWrite(DIR_P,LOW); // kierunek do przodu
+    rotation=(-1)*rotation;
+  }
+  else {
+    digitalWrite(DIR_P,HIGH); // kierunek do przodu
+  }
   float stepsPerRotation = (360.00/DEGRE);
   unsigned long stepPeriodmicroSec = ((60.0000 / (rpm * stepsPerRotation)) * 1E6 / 2.0000) - 5;
   for (unsigned long i = 0; i < rotation; i++) {
@@ -143,6 +169,15 @@ void stepperRotate_P(float rotation, float rpm) {
 }
 
 void stepperRotate_S(float rotation, float rpm) {
+  if(rotation<0) {
+    digitalWrite(DIR_P,LOW); // kierunek do przodu
+    digitalWrite(DIR_L,LOW); // kierunek do przodu
+    rotation=(-1)*rotation;
+  }
+  else {
+    digitalWrite(DIR_P,HIGH); // kierunek do przodu
+    digitalWrite(DIR_L,HIGH); // kierunek do przodu
+  }
   float stepsPerRotation = (360.00/DEGRE);
   unsigned long stepPeriodmicroSec = ((60.0000 / (rpm * stepsPerRotation)) * 1E6 / 2.0000) - 5;
   for (unsigned long i = 0; i < rotation; i++) {
@@ -155,16 +190,93 @@ void stepperRotate_S(float rotation, float rpm) {
   }
 }
 
-void setup() {
-  pinMode(LED, OUTPUT); // Ustawienie portu led jako wyjscie
-  Serial.begin(9600);   // Ustawienie prędkości transmisji
-  //QRT_START();          // Kalibracja i sprawdzenie QRT
-  //US_START();           // Ustawienie wejsc/wyjsc
-
+void stepper_START(){
   pinMode(STEP_P, OUTPUT); // Ustawienie portow na wyjscia dla silnikow
   pinMode(DIR_P, OUTPUT);
   pinMode(STEP_L, OUTPUT);
   pinMode(DIR_L, OUTPUT);
+}
+
+void po_linii() {
+  QRT_odczyt();
+  
+  if(QRT_ktory_widzi()==7 || QRT_ktory_widzi()==8) {
+    stepperRotate_P(2, m_speed);
+    stepperRotate_L(-1, m_speed);
+  }
+  if(QRT_ktory_widzi()==1 || QRT_ktory_widzi()==2) {
+    stepperRotate_L(2, m_speed);
+    stepperRotate_P(-1, m_speed);
+  }
+  if(QRT_ktory_widzi()==3) stepperRotate_L(3, m_speed);
+  if(QRT_ktory_widzi()==4 || QRT_ktory_widzi()==5) stepperRotate_S(5, m_speed);
+  if(QRT_ktory_widzi()==6) stepperRotate_P(3, m_speed);
+}
+
+void wykrycie_przeszkody(){
+  long US_odleglosc_L;
+  long US_odleglosc_S;
+  long US_odleglosc_P;
+
+  US_POMIAR(TRIG_L);                    // Wykonanie pomiaru
+  US_odleglosc_L=pulseIn(ECHO_L, HIGH); // Pobranie wyniku pomiaru
+  US_POMIAR(TRIG_S);
+  US_odleglosc_S=pulseIn(ECHO_S, HIGH);
+  US_POMIAR(TRIG_P);
+  US_odleglosc_P=pulseIn(ECHO_P, HIGH);
+
+  stepperRotate_S(3, (10+m_speed));
+  if(US_odleglosc_S>50 && US_odleglosc_S<800){
+    stepperRotate_P(-30, m_speed);
+      if(US_odleglosc_P>600){
+        for(int i=0; i<6; i++) {
+          stepperRotate_L(10, m_speed);
+          stepperRotate_P(-10, m_speed);
+        }
+        while(1){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          if(US_odleglosc_L<1050) {
+            stepperRotate_L(10, m_speed);
+          }
+          else stepperRotate_P(10, m_speed);
+          
+          US_POMIAR(TRIG_L);                    // Wykonanie pomiaru
+          US_odleglosc_L=pulseIn(ECHO_L, HIGH); // Pobranie wyniku pomiaru
+          US_POMIAR(TRIG_S);
+          US_odleglosc_S=pulseIn(ECHO_S, HIGH);
+          US_POMIAR(TRIG_P);
+          US_odleglosc_P=pulseIn(ECHO_P, HIGH);
+        }
+      }
+      else if(US_odleglosc_L>600){
+        for(int i=0; i<6; i++) {
+          stepperRotate_P(10, m_speed);
+          stepperRotate_L(-10, m_speed);
+        }
+        while(1){ //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          if(US_odleglosc_P<1050) {
+            stepperRotate_P(10, m_speed);
+          }
+          else stepperRotate_L(10, m_speed);
+                  
+          US_POMIAR(TRIG_L);                    // Wykonanie pomiaru
+          US_odleglosc_L=pulseIn(ECHO_L, HIGH); // Pobranie wyniku pomiaru
+          US_POMIAR(TRIG_S);
+          US_odleglosc_S=pulseIn(ECHO_S, HIGH);
+          US_POMIAR(TRIG_P);
+          US_odleglosc_P=pulseIn(ECHO_P, HIGH);
+        }
+      }
+      else miganie_LED(LED, 500);
+  }
+}
+
+void setup() {
+  pinMode(LED, OUTPUT); // Ustawienie portu led jako wyjscie
+  Serial.begin(9600);   // Ustawienie prędkości transmisji
+  //QRT_START();          // Kalibracja i sprawdzenie QRT
+  US_START();           // Ustawienie wejsc/wyjsc
+
+  stepper_START();      // Ustawienie portow na wyjscia dla silnikow
   
   digitalWrite(DIR_P,HIGH); // kierunek do przodu
   digitalWrite(DIR_L,HIGH); // kierunek do przodu
@@ -179,7 +291,7 @@ void loop() {
 
   /*
   QRT_odczyt();
-  //QRT_wypisanie_wartosci();
+  QRT_wypisanie_wartosci();
   Serial.println(QRT_ktory_widzi());
 
   US_POMIAR(TRIG_L);                    // Wykonanie pomiaru
@@ -195,9 +307,15 @@ void loop() {
   Serial.print(" ");
   Serial.print(US_odleglosc_P);
   Serial.println(" ");
-  */
+  delay(100);
+  
 
+  /*
   stepperRotate_S(10, 50);
   stepperRotate_P(20, 50);
   stepperRotate_L(20, 50);
+  */
+  
+  //po_linii();
+  wykrycie_przeszkody();
 }

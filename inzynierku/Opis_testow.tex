@@ -1,26 +1,35 @@
 \chapter{Testy}
 \section{Test podążania po linii}
-\subsection{Cel testu}
+\subsection{Cel}
 Test ma na celu sprawdzenie poprawności implementacji czujników odbiciowych wraz z wykazaniem poprawności integracji silników z odczytami.
-\subsection{Opis testu}
-Po uruchomieniu robota przeprowadzono kalibrację. Następnie ustawiono konstrukcję na trasie wyznaczonej przez czarną linię. Owa trasa zawierała zakręty pod kątem prostym odpowiednio w lewo, dwukrotnie w prawo oraz w lewo. Test przeprowadzono dziesięć razy.
-\subsection{Rezultaty testu}
-Podczas testu robot raz zjechał z wyznaczonej trasy pomijając drugi zakręt w prawo. Wszystkie pozostałe przejazdy zakończyły się sukcesem poprzez osiągnięcie końca trasy.
+\subsection{Opis}
+Po uruchomieniu robota przeprowadzono kalibrację czujników odbiciowych. Następnie przetestowano konstrukcję dwóch trasach wyznaczanych przez czarną linię.
+\begin{itemize}
+    \item Pierwsza trasa zawierała zakręty pod kątem prostym odpowiednio w prawo, dwukrotnie w lewo oraz w prawo.
+    \item Druga trasa zawierała zakręty pod kątem $45^\circ$ odpowiednio dwukrotnie w prawo, trzykrotnie w lewo, raz w prawo.
+\end{itemize}
+Testy na każdej z tras przeprowadzono dziesięć razy.
+\subsection{Rezultaty}
+Podczas pierwszego testu robot raz zjechał z wyznaczonej trasy pomijając drugi zakręt w lewo. Wszystkie pozostałe przejazdy zakończyły się sukcesem poprzez osiągnięcie końca trasy. Test wykazał spodziewany rezultat.
 
 \section{Test wykrywania przeszkody}
+\subsection{Cel}
 Test ma na celu sprawdzenie poprawności implementacji czujników ultradźwiękowych wraz z wykazaniem poprawności integracji silników z odczytami.
-\subsection{Cel testu}
-\subsection{Opis testu}
-\subsection{Rezultaty testu}
+\subsection{Opis}
+Ustawiono robota naprzeciw przeszkody w postaci kartonu pod  różnymi kontami w odległości około $0,5m$. Podczas tego zadania zostały wyłączone czujniki odbiciowe. Test przeprowadzono dziesięć razy.
+\subsection{Rezultaty}
+Podczas testów robot ani razu nie dotknął przeszkody lub ściany. Jednakże po wjechaniu w szczelinę, z której nie można było wyjechać inaczej niż do tyłu robot zatrzymuje się i miga diodą, co informuje operatora o braku możliwości kontynuowania zadania. Test wykazał spodziewany rezultat.
 
 \section{Test podążania wzdłuż przeszkody}
+\subsection{Cel}
 Test ma na celu sprawdzenie zachowania podczas utrzymywania stałej odległości od przeszkody, tym samym sprawdzenie poprawności omijania przeszkody.
-\subsection{Cel testu}
-\subsection{Opis testu}
-\subsection{Rezultaty testu}
+\subsection{Opis}
+Ustawiono robota naprzeciw przeszkody, którą była ściana. Owe ustawienie ma na celu uzyskania długiej przeszkody by robot podążał wzdłuż niej. Pozwala to też sprawdzić jak robot zachowa się podczas pokonywania narożnika wewnętrznego oraz zewnętrznego. Konstrukcję wypuszczano w odległości około $0,5m$ na wprost przeszkody. Ów test przeprowadzono także umieszczając konstrukcie w sytuacji gdy miał ścianę z przodu oraz prawej strony jak i w sytuacji gdy miał ścianę z przodu i lewej strony.Podczas tego zadania zostały wyłączone czujniki odbiciowe. Test przeprowadzono dziesięć razy.
+\subsection{Rezultaty}
+Robot wykazał prawidłowe zachowanie na przeszkodę, utrzymywał odległość około $15cm$ od ściany. Pojazd poradził sobie z minięciem narożnika wewnętrznego jak i zewnętrznego.
 
 \section{Test powrotu na linię}
+\subsection{Cel}
 Test ma na celu sprawdzenie zachowania po ominięciu przeszkody i wykazania, czy robot jest w stanie powrócić na tor jazdy.
-\subsection{Cel testu}
-\subsection{Opis testu}
-\subsection{Rezultaty testu}
+\subsection{Opis}
+\subsection{Rezultaty}
